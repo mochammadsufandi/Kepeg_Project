@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Pegawai {
+  id Int @id @default(autoincrement())
+  NIP String @unique 
+  NRP String @unique
+  nama String
+  tempatLahir String
+  tanggalLahir DateTime
+  originalRank String
+  numericRank Decimal
+  pangkatSejak DateTime
+  jabatanSejak DateTime
+  PNSSejak DateTime
+  pendidikanTerakhir String
+  promotionYAD DateTime
+  jaksa Boolean
+  keterangan String
+  promotionChecking Boolean
+  marker Boolean
+  keteranganTambahan String
+  jabatanId Int?
+  jabatan Jabatan? @relation(fields: [jabatanId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  unitId Int?
+  unitKerja UnitKerja? @relation(fields: [unitId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+}
+
+model UnitKerja {
+  id Int @id @default(autoincrement())
+  nama String @unique
+  Pegawai Pegawai[]
+}
+
+model Jabatan {
+  id Int @id @default(autoincrement())
+  nama String @unique
+  Pegawai Pegawai[]
+}
