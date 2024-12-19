@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import router from "./routes/main";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", router);
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server is listening on PORT : ${port}`);

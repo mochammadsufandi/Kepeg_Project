@@ -15,7 +15,7 @@ class InputPersonnelController {
           message: "Input Multiple Personnel is Success",
         });
       } catch (err) {
-        console.log(err);
+        // console.log(err);
         next(err);
       }
     });

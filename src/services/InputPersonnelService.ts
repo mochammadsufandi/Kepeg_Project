@@ -1,19 +1,20 @@
 import mammoth from "mammoth";
-
-interface InputMultipleParams {
-  files: Express.Multer.File;
-}
+import { InputMultipleParams } from "../interface/params/InputParams";
+import CustomResponseError from "../middleware/errorClass/errorClass";
 
 class InputPersonnelService {
   static async InputMultiple(params: InputMultipleParams) {
-    // const extractTextFromWord = async (filepath: Buffer<ArrayBufferLike>) => {
-    //   const result = await mammoth.extractRawText({ filepath });
-    //   console.log(result);
-    // };
-    // extractTextFromWord(params.files.buffer);
-    const fileBuffer = params.files.buffer;
-    const oi = await mammoth.extractRawText({ buffer: fileBuffer });
-    console.log(oi);
+    if (!params.files)
+      throw new CustomResponseError({
+        name: "InvalidInputType",
+        statusCode: 400,
+        message: "Please Input Required File",
+      });
+    const fileToExtract = params.files?.buffer;
+    const extractResult = await mammoth.extractRawText({
+      buffer: fileToExtract,
+    });
+    console.log(extractResult.value);
   }
 }
 
