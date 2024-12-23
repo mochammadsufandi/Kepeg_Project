@@ -18,20 +18,22 @@ model Pegawai {
   NIP String @unique 
   NRP String @unique
   nama String
+  gender String @default("Unknown")
   tempatLahir String
   tanggalLahir DateTime
   originalRank String
-  numericRank Decimal
+  numericRank Decimal?
   pangkatSejak DateTime
   jabatanSejak DateTime
-  PNSSejak DateTime
+  PNSSejak DateTime?
   pendidikanTerakhir String
   promotionYAD DateTime
   jaksa Boolean
+  jaksaSejak DateTime?
   keterangan String
-  promotionChecking Boolean
-  marker Boolean
-  keteranganTambahan String
+  promotionChecking Boolean?
+  marker Boolean @default(false)
+  keteranganTambahan String?
   jabatanId Int?
   jabatan Jabatan? @relation(fields: [jabatanId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   unitId Int?
