@@ -24,3 +24,7 @@ export interface PromotionCheckingConverterInput {
   pendidikanTerakhir: string;
   numericRank: number;
 }
+
+export interface DynamicSelectFieldInput {
+  [key: string]: string;
+}

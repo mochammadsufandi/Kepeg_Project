@@ -1,7 +1,9 @@
 import {
+  DynamicSelectFieldInput,
   FormatDataMultiple,
   PromotionCheckingConverterInput,
 } from "../interface/params/InputParams";
+import { FilterField } from "../interface/params/SelectField";
 
 export class ConverterData {
   static arrangeArrayObjectData(data: string[]): FormatDataMultiple[] {
@@ -166,4 +168,96 @@ export class ConverterData {
       return false;
     }
   }
+
+  static dynamicFieldConverter = (params: DynamicSelectFieldInput): FilterField => {
+    const result = {} as FilterField;
+    Object.keys(params).forEach((key, idx) => {
+      switch (key) {
+        case "gender":
+          result.gender = params.gender;
+          break;
+        case "tempatLahir":
+          result.tempatLahir = params.tempatLahir;
+          break;
+        case "tanggalLahir": {
+          const tanggalLahir = new Date(params[key]);
+          if (tanggalLahir.toString() !== "Invalid Date") {
+            result.tanggalLahir = tanggalLahir;
+          }
+          break;
+        }
+        case "originalRank":
+          result.originalRank = params.originalRank;
+          break;
+        case "pangkatSejak": {
+          const pangkatSejak = new Date(params[key]);
+          if (pangkatSejak.toString() !== "Invalid Date") {
+            result.pangkatSejak = pangkatSejak;
+          }
+          break;
+        }
+        case "jabatanSejak": {
+          const jabatanSejak = new Date(params[key]);
+          if (jabatanSejak.toString() !== "Invalid Date") {
+            result.jabatanSejak = jabatanSejak;
+          }
+          break;
+        }
+        case "PNSSejak": {
+          const PNSSejak = new Date(params[key]);
+          if (PNSSejak.toString() !== "Invalid Date") {
+            result.PNSSejak = PNSSejak;
+          }
+          break;
+        }
+        case "pendidikanTerakhir":
+          result.pendidikanTerakhir = params[key];
+
+          break;
+        case "promotionYAD": {
+          const promotionYAD = new Date(params[key]);
+          if (promotionYAD.toString() !== "Invalid Date") {
+            result.promotionYAD = promotionYAD;
+          }
+          break;
+        }
+        case "jaksa": {
+          const jaksa = params[key] === "true" ? true : false;
+          result.jaksa = jaksa;
+          break;
+        }
+        case "jaksaSejak": {
+          const jaksaSejak = new Date(params[key]);
+          if (jaksaSejak.toString() !== "Invalid Date") {
+            result.jaksaSejak = jaksaSejak;
+          }
+          break;
+        }
+        case "keterangan": {
+          result.keterangan = params[key];
+          break;
+        }
+        case "promotionChecking": {
+          const promotionChecking = params[key] === "true" ? true : false;
+          result.promotionChecking = promotionChecking;
+          break;
+        }
+        case "marker": {
+          const marker = params[key] === "true" ? true : false;
+          result.marker = marker;
+          break;
+        }
+        case "keteranganTambahan": {
+          result.keteranganTambahan = params[key];
+          break;
+        }
+        case "jabatanId":
+          result.jabatanId = parseInt(params[key]);
+          break;
+        case "unitId":
+          result.unitId = parseInt(params[key]);
+      }
+    });
+    return result;
+  };
 }
