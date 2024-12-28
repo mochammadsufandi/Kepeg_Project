@@ -8,5 +8,6 @@ router.post("/inputFile", InputPersonnelController.inputMultiple);
 router.get("/getByNIP", FilterController.filterNIPNRP);
 router.get("/searchByName", FilterController.searchByName);
 router.get("/dynamicFilter", FilterController.dynamicFilter);
+router.post("/inputSingle", InputPersonnelController.inputSingle);
 
 export default router;

@@ -28,3 +28,5 @@ export interface PromotionCheckingConverterInput {
 export interface DynamicSelectFieldInput {
   [key: string]: string;
 }
+
+export interface SingleInputParams extends FormatDataMultiple {}
