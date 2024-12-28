@@ -12,12 +12,24 @@ class InputPersonnelController {
         const params = { files };
         await InputPersonnelService.InputMultiple(params);
         res.status(200).json({
-          message: "Input Multiple Personnel is Success",
+          message: "Input Multiple Personnels is Success",
         });
       } catch (err) {
         next(err);
       }
     });
+  }
+
+  static async inputSingle(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const params = req.body;
+      await InputPersonnelService.inputSingle(params);
+      res.status(200).json({
+        message: "Input Personnel is Successfully",
+      });
+    } catch (err) {
+      next(err);
+    }
   }
 }
 

@@ -51,12 +51,12 @@ export class FilterService {
   static async dynamicFilter(params: Request["headers"]): Promise<PersonnelInterface[]> {
     const fields = params.filterfields;
     let filterFields = {} as FilterField;
+    const selectionField = SelectField.dynamicColumn();
     if (fields) {
       const object = JSON.parse(fields as unknown as string);
       filterFields = ConverterData.dynamicFieldConverter(object);
     }
 
-    console.log(filterFields);
     const originalRank = filterFields.originalRank as string;
     const pendidikanTerakhir = filterFields.pendidikanTerakhir as string;
     const keterangan = filterFields.keterangan as string;
@@ -82,6 +82,7 @@ export class FilterService {
           mode: "insensitive",
         },
       },
+      select: selectionField,
     });
     return personnels;
   }

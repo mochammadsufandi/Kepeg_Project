@@ -84,7 +84,7 @@ export class ConverterData {
   }
 
   static numericRankConverter(params: string): number {
-    const originalRank = params.split(" ")[3];
+    const originalRank = params.match(/\(.*?\)/g)?.[0];
     let numericRank = 0;
     switch (originalRank) {
       case "(IV/e)":
@@ -171,7 +171,7 @@ export class ConverterData {
 
   static dynamicFieldConverter = (params: DynamicSelectFieldInput): FilterField => {
     const result = {} as FilterField;
-    Object.keys(params).forEach((key, idx) => {
+    Object.keys(params).forEach((key) => {
       switch (key) {
         case "gender":
           result.gender = params.gender;
