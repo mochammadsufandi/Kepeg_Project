@@ -62,6 +62,7 @@ class InputPersonnelService {
       "tanggalLahir",
       "originalRank",
       "pangkatSejak",
+      "namaJabatan",
       "jabatanSejak",
       "pendidikanTerakhir",
       "jaksa",

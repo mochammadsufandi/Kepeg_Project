@@ -1,4 +1,4 @@
-import { FilterField, SelectFieldInterface } from "../interface/params/SelectField";
+import { SelectFieldInterface } from "../interface/params/SelectField";
 
 export class SelectField {
   static dynamicColumn(): SelectFieldInterface {
@@ -21,6 +21,7 @@ export class SelectField {
       promotionChecking: true,
       marker: true,
       keteranganTambahan: true,
+      namaJabatan: true,
       jabatanId: true,
       unitId: true,
       jabatan: true,

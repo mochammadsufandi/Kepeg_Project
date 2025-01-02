@@ -34,6 +34,7 @@ model Pegawai {
   promotionChecking Boolean?
   marker Boolean @default(false)
   keteranganTambahan String?
+  namaJabatan String
   jabatanId Int?
   jabatan Jabatan? @relation(fields: [jabatanId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   unitId Int?

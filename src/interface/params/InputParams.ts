@@ -15,6 +15,7 @@ export interface FormatDataMultiple {
   pendidikanTerakhir: string;
   jaksa: boolean;
   jaksaSejak: Date | null;
+  namaJabatan: string;
   keterangan: string;
   jabatanId: number | null;
   unitId: number | null;
@@ -45,6 +46,7 @@ export interface SingleEditParams {
   promotionYAD: Date | undefined;
   jaksa: boolean | undefined;
   jaksaSejak: Date | undefined;
+  namaJabatan: string | undefined;
   jabatanId: number | undefined;
   unitId: number | undefined;
   gender: string | undefined;

@@ -1,6 +1,7 @@
 import "express";
 import { FilterField } from "../../src/interface/params/SelectField";
 import { IncomingHttpHeaders } from "http";
+import { DynamicSelectFieldInput } from "../../src/interface/params/InputParams";
 
 declare global {
   namespace Express {
@@ -17,5 +18,6 @@ declare global {
 declare module "http" {
   interface IncomingHttpHeaders {
     filterfields: FilterField;
+    sortfields: DynamicSelectFieldInput;
   }
 }
