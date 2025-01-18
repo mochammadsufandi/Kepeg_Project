@@ -154,13 +154,163 @@ export class ConverterData {
     }
     return numericRank;
   }
-  static originalRankConverter(param: string): string {
-    return "";
+  static originalRankConverter(param: number): string | null {
+    let originalRank: string | null;
+    switch (param) {
+      case 0:
+        originalRank = null;
+        break;
+      case 1:
+        originalRank = "(I/a)";
+        break;
+      case 2:
+        originalRank = "(I/b)";
+        break;
+      case 3:
+        originalRank = "(I/c)";
+        break;
+      case 4:
+        originalRank = "(I/d)";
+        break;
+      case 5:
+        originalRank = "(II/a)";
+        break;
+      case 6:
+        originalRank = "(II/b)";
+        break;
+      case 7:
+        originalRank = "(II/c)";
+        break;
+      case 8:
+        originalRank = "(II/d)";
+        break;
+      case 9:
+        originalRank = "(III/a)";
+        break;
+      case 10:
+        originalRank = "(III/b)";
+        break;
+      case 11:
+        originalRank = "(III/c)";
+        break;
+      case 12:
+        originalRank = "(III/d)";
+        break;
+      case 13:
+        originalRank = "(IV/a)";
+        break;
+      case 14:
+        originalRank = "(IV/b)";
+        break;
+      case 15:
+        originalRank = "(IV/c)";
+        break;
+      case 16:
+        originalRank = "(IV/d)";
+        break;
+      case 17:
+        originalRank = "(IV/e)";
+        break;
+      default:
+        originalRank = null;
+    }
+    return originalRank;
+  }
+
+  static originalRankFullConverter({
+    jaksa,
+    originalRank,
+  }: {
+    jaksa: boolean;
+    originalRank: string;
+  }): string | null {
+    let result: string | null;
+    if (jaksa) {
+      switch (originalRank) {
+        case "(IV/d)":
+          result = "Jaksa Utama Madya (IV/d)";
+          break;
+        case "(IV/c)":
+          result = "Jaksa Utama Muda (IV/c)";
+          break;
+        case "(IV/b)":
+          result = "Jaksa Utama Pratama (IV/b)";
+          break;
+        case "(IV/a)":
+          result = "Jaksa Madya (IV/a)";
+          break;
+        case "(III/d)":
+          result = "Jaksa Muda (III/d)";
+          break;
+        case "(III/c)":
+          result = "Jaksa Pratama (III/c)";
+          break;
+        case "(III/b)":
+          result = "Ajun Jaksa (III/b)";
+          break;
+        case "(III/a)":
+          result = "Ajun Jaksa Madya (III/a)";
+          break;
+        default:
+          result = null;
+      }
+    } else {
+      switch (originalRank) {
+        case "(IV/a)":
+          result = "Adi Wira (IV/a)";
+          break;
+        case "(III/d)":
+          result = "Sena Wira (III/d)";
+          break;
+        case "(III/c)":
+          result = "Madya Wira (III/c)";
+          break;
+        case "(III/b)":
+          result = "Muda Wira (III/b)";
+          break;
+        case "(III/a)":
+          result = "Yuana Wira (III/a)";
+          break;
+        case "(II/d)":
+          result = "Sena Darma (II/d)";
+          break;
+        case "(II/c)":
+          result = "Madya Darma (II/c)";
+          break;
+        case "(II/b)":
+          result = "Muda Darma (II/b)";
+          break;
+        case "(II/a)":
+          result = "Yuana Darma (II/a)";
+          break;
+        default:
+          result = null;
+      }
+    }
+    return result;
   }
 
   static promotionYADConverter(params: Date): Date {
-    const lastPromotionDate = new Date(params);
-    lastPromotionDate.setFullYear(lastPromotionDate.getFullYear() + 4);
+    let lastPromotionDate: Date = new Date(params);
+    const day = lastPromotionDate.getDate();
+    const month = lastPromotionDate.getMonth();
+    const year = lastPromotionDate.getFullYear();
+    lastPromotionDate = new Date(Date.UTC(year, month, day, 0, 0, 0));
+    if (params.getDate() !== 1 && params.getMonth() % 2 === 0) {
+      const day = 1;
+      const month = lastPromotionDate.getMonth() + 1;
+      const year = lastPromotionDate.getFullYear();
+      lastPromotionDate = new Date(Date.UTC(year, month, day, 0, 0, 0));
+      lastPromotionDate.setFullYear(lastPromotionDate.getFullYear() + 4);
+    } else if (lastPromotionDate.getDate() !== 1 && lastPromotionDate.getMonth() % 2 !== 0) {
+      const day = 1;
+      const month = lastPromotionDate.getMonth();
+      const year = lastPromotionDate.getFullYear();
+      lastPromotionDate = new Date(Date.UTC(year, month, day, 0, 0, 0));
+      lastPromotionDate.setFullYear(lastPromotionDate.getFullYear() + 4);
+    } else {
+      lastPromotionDate.setFullYear(lastPromotionDate.getFullYear() + 4);
+    }
     return lastPromotionDate;
   }
 

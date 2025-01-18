@@ -23,6 +23,8 @@ class EditService {
 
     if (editField.tanggalLahir) {
       const tanggalLahir = new Date(editField.tanggalLahir);
+      const timeZoneOffset = tanggalLahir.getTimezoneOffset() / 60;
+      tanggalLahir.setHours(tanggalLahir.getHours() - timeZoneOffset);
       if (tanggalLahir.toString() !== "Invalid Date") {
         editField.tanggalLahir = tanggalLahir;
       } else {
@@ -31,6 +33,8 @@ class EditService {
     }
     if (editField.pangkatSejak) {
       const pangkatSejak = new Date(editField.pangkatSejak);
+      const timeZoneOffset = pangkatSejak.getTimezoneOffset() / 60;
+      pangkatSejak.setHours(pangkatSejak.getHours() - timeZoneOffset);
       if (pangkatSejak.toString() !== "Invalid Date") {
         editField.pangkatSejak = pangkatSejak;
       } else {
@@ -39,6 +43,8 @@ class EditService {
     }
     if (editField.jabatanSejak) {
       const jabatanSejak = new Date(editField.jabatanSejak);
+      const timeZoneOffset = jabatanSejak.getTimezoneOffset() / 60;
+      jabatanSejak.setHours(jabatanSejak.getHours() - timeZoneOffset);
       if (jabatanSejak.toString() !== "Invalid Date") {
         editField.jabatanSejak = jabatanSejak;
       } else {
@@ -47,6 +53,8 @@ class EditService {
     }
     if (editField.PNSSejak) {
       const PNSSejak = new Date(editField.PNSSejak);
+      const timeZoneOffset = PNSSejak.getTimezoneOffset() / 60;
+      PNSSejak.setHours(PNSSejak.getHours() - timeZoneOffset);
       if (PNSSejak.toString() !== "Invalid Date") {
         editField.PNSSejak = PNSSejak;
       } else {
@@ -55,14 +63,28 @@ class EditService {
     }
     if (editField.promotionYAD) {
       const promotionYAD = new Date(editField.promotionYAD);
+      const timeZoneOffset = promotionYAD.getTimezoneOffset() / 60;
+      promotionYAD.setHours(promotionYAD.getHours() - timeZoneOffset);
       if (promotionYAD.toString() !== "Invalid Date") {
         editField.promotionYAD = promotionYAD;
       } else {
         editField.promotionYAD = null;
       }
     }
+    if (editField.jaksaSejak) {
+      const jaksaSejak = new Date(editField.jaksaSejak);
+      const timeZoneOffset = jaksaSejak.getTimezoneOffset() / 60;
+      jaksaSejak.setHours(jaksaSejak.getHours() - timeZoneOffset);
+      if (jaksaSejak.toString() !== "Invalid Date") {
+        editField.jaksaSejak = jaksaSejak;
+      } else {
+        editField.jaksaSejak = null;
+      }
+    }
     if (editField.jaksa?.toString() === "true") {
       editField.jaksa = true;
+    } else if (editField.jaksa?.toString() === "false") {
+      editField.jaksa = false;
     }
     if (editField.NIP) {
       editField.gender = ConverterData.GenderConverter(editField.NIP);
@@ -73,6 +95,12 @@ class EditService {
     if (editField.unitId) {
       editField.unitId = parseInt(editField.unitId?.toString() as string);
     }
+    if (editField.jaksa !== null && editField.originalRank !== null) {
+      editField.originalRank = ConverterData.originalRankFullConverter({
+        jaksa: editField.jaksa,
+        originalRank: editField.originalRank,
+      });
+    }
     if (editField.originalRank) {
       editField.numericRank = ConverterData.numericRankConverter(editField.originalRank);
     }
@@ -82,14 +110,19 @@ class EditService {
         numericRank: editField.numericRank,
       });
     }
+    if (editField.marker?.toString() === "true") {
+      editField.marker = true;
+    } else if (editField.marker?.toString() === "false") {
+      editField.marker = false;
+    }
     console.log(editField);
 
-    // await prisma.pegawai.update({
-    //   where: {
-    //     NIP: editField.NIP,
-    //   },
-    //   data: editField,
-    // });
+    await prisma.pegawai.update({
+      where: {
+        NIP: editField.NIP,
+      },
+      data: editField,
+    });
   }
 }
 

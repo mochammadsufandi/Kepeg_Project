@@ -4,14 +4,24 @@ import { ConverterData } from "../utils/converterFunction";
 const prisma = new PrismaClient();
 
 const cronJobForCheckingPromotion = () => {
-  cron.schedule("0 10 1 2,4,6,8,10,12 *", async () => {
+  cron.schedule("0 10 * * *", async () => {
     const personnel = await prisma.pegawai.findMany();
     const nowDate = new Date();
     const newPromotionDate = ConverterData.promotionYADConverter(nowDate);
     personnel.forEach(async (value) => {
-      const originalRank = value.originalRank?.match(/\(.*?\)/g)?.[0];
-      const numericRank = value.numericRank;
-      if (value.promotionYAD === nowDate) {
+      if (value.promotionYAD === nowDate && value.promotionChecking) {
+        const newNumericRank =
+          value.numericRank !== null ? (value.numericRank !== 0 ? value.numericRank + 1 : 0) : null;
+        const newOriginalRank =
+          newNumericRank !== null ? ConverterData.originalRankConverter(newNumericRank) : null;
+
+        const newPromotionChecking =
+          value.pendidikanTerakhir !== null && value.numericRank !== null
+            ? ConverterData.promotionCheckingConverter({
+                pendidikanTerakhir: value.pendidikanTerakhir,
+                numericRank: value.numericRank,
+              })
+            : null;
         await prisma.pegawai.update({
           where: {
             NIP: value.NIP,
@@ -20,12 +30,13 @@ const cronJobForCheckingPromotion = () => {
           data: {
             pangkatSejak: nowDate,
             promotionYAD: newPromotionDate,
-            numericRank: value.numericRank ? value.numericRank + 1 : null,
+            numericRank: newNumericRank,
+            originalRank: newOriginalRank,
+            promotionChecking: newPromotionChecking,
           },
         });
       }
     });
-    console.log(personnel);
   });
 };
 
