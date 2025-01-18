@@ -30,7 +30,24 @@ export interface DynamicSelectFieldInput {
   [key: string]: string | null;
 }
 
-export interface SingleInputParams extends FormatDataMultiple {}
+export interface SingleInputParams {
+  NIP: string;
+  NRP: string;
+  nama: string;
+  tempatLahir: string | null;
+  tanggalLahir: Date | null;
+  originalRank: string | null;
+  pangkatSejak: Date | null;
+  jabatanSejak: Date | null;
+  PNSSejak: Date | null;
+  pendidikanTerakhir: string | null;
+  jaksa: boolean | null;
+  jaksaSejak: Date | null;
+  namaJabatan: string | null;
+  keterangan: string | null;
+  jabatanId: number | null;
+  unitId: number | null;
+}
 
 export interface SingleEditParams {
   NIP: string;
