@@ -24,7 +24,7 @@ class InputPersonnelController {
     try {
       const params = req.body;
       await InputPersonnelService.inputSingle(params);
-      res.status(200).json({
+      res.status(201).json({
         message: "Input Personnel is Successfully",
       });
     } catch (err) {

@@ -3,7 +3,8 @@ import {
   FormatDataMultiple,
   PromotionCheckingConverterInput,
 } from "../interface/params/InputParams";
-import { FilterField } from "../interface/params/SelectField";
+import { FilterField, SortFieldResult } from "../interface/params/SelectField";
+import CustomResponseError from "../middleware/errorClass/errorClass";
 
 export class ConverterData {
   static arrangeArrayObjectData(data: string[]): FormatDataMultiple[] {
@@ -41,12 +42,15 @@ export class ConverterData {
             const [day, month, year] = value.split("-").map(Number);
             obj["pangkatSejak"] = new Date(Date.UTC(year, month - 1, day));
             break;
-          case 7: {
+          case 7:
+            obj["namaJabatan"] = value;
+            break;
+          case 8: {
             const [day, month, year] = value.split("-").map(Number);
             obj["jabatanSejak"] = new Date(Date.UTC(year, month - 1, day));
             break;
           }
-          case 8: {
+          case 9: {
             const [day, month, year] = value.split("-").map(Number);
             if (value === "-") {
               obj["PNSSejak"] = null;
@@ -55,10 +59,10 @@ export class ConverterData {
             }
             break;
           }
-          case 9:
+          case 10:
             obj["pendidikanTerakhir"] = value;
             break;
-          case 10: {
+          case 11: {
             const [day, month, year] = value.split("-").map(Number);
             if (value === "-") {
               obj["jaksaSejak"] = null;
@@ -67,14 +71,12 @@ export class ConverterData {
             }
             break;
           }
-          case 11:
+          case 12:
             obj["keterangan"] = value;
             break;
-          case 12:
+          case 13:
             obj["unitId"] = parseInt(value);
             break;
-          case 13:
-            obj["jabatanId"] = parseInt(value);
         }
       });
       if (obj["jaksaSejak"]) obj["jaksa"] = true;
@@ -83,7 +85,18 @@ export class ConverterData {
     return arrayObjectData;
   }
 
+  static GenderConverter(param: string): string {
+    const parseIntegerFromNIP = parseInt(param.split("").join("")[14]);
+    if (parseIntegerFromNIP === 1) {
+      return "L";
+    } else if (parseIntegerFromNIP === 2) {
+      return "P";
+    } else {
+      return "";
+    }
+  }
   static numericRankConverter(params: string): number {
+    if (!params) return 0;
     const originalRank = params.match(/\(.*?\)/g)?.[0];
     let numericRank = 0;
     switch (originalRank) {
@@ -141,6 +154,9 @@ export class ConverterData {
     }
     return numericRank;
   }
+  static originalRankConverter(param: string): string {
+    return "";
+  }
 
   static promotionYADConverter(params: Date): Date {
     const lastPromotionDate = new Date(params);
@@ -171,43 +187,43 @@ export class ConverterData {
 
   static dynamicFieldConverter = (params: DynamicSelectFieldInput): FilterField => {
     const result = {} as FilterField;
+    function checkingNullAndConvertStringToDate(param: string | null): Date | null {
+      const date = param !== null ? new Date(param) : new Date("");
+      if (date.toString() !== "Invalid Date") return date;
+      return null;
+    }
+    function checkingNullAndConvertStringToNumber(param: string | null): number | null {
+      const number = param !== null ? parseInt(param) : null;
+      return number;
+    }
     Object.keys(params).forEach((key) => {
       switch (key) {
         case "gender":
-          result.gender = params.gender;
+          result.gender = params[key] as string;
           break;
         case "tempatLahir":
-          result.tempatLahir = params.tempatLahir;
+          result.tempatLahir = params[key];
           break;
         case "tanggalLahir": {
-          const tanggalLahir = new Date(params[key]);
-          if (tanggalLahir.toString() !== "Invalid Date") {
-            result.tanggalLahir = tanggalLahir;
-          }
+          result.tanggalLahir = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
         case "originalRank":
-          result.originalRank = params.originalRank;
+          result.originalRank = params[key];
           break;
         case "pangkatSejak": {
-          const pangkatSejak = new Date(params[key]);
-          if (pangkatSejak.toString() !== "Invalid Date") {
-            result.pangkatSejak = pangkatSejak;
-          }
+          result.pangkatSejak = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
+        case "namaJabatan":
+          result.namaJabatan = params[key];
+          break;
         case "jabatanSejak": {
-          const jabatanSejak = new Date(params[key]);
-          if (jabatanSejak.toString() !== "Invalid Date") {
-            result.jabatanSejak = jabatanSejak;
-          }
+          result.jabatanSejak = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
         case "PNSSejak": {
-          const PNSSejak = new Date(params[key]);
-          if (PNSSejak.toString() !== "Invalid Date") {
-            result.PNSSejak = PNSSejak;
-          }
+          result.PNSSejak = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
         case "pendidikanTerakhir":
@@ -215,10 +231,7 @@ export class ConverterData {
 
           break;
         case "promotionYAD": {
-          const promotionYAD = new Date(params[key]);
-          if (promotionYAD.toString() !== "Invalid Date") {
-            result.promotionYAD = promotionYAD;
-          }
+          result.promotionYAD = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
         case "jaksa": {
@@ -227,10 +240,7 @@ export class ConverterData {
           break;
         }
         case "jaksaSejak": {
-          const jaksaSejak = new Date(params[key]);
-          if (jaksaSejak.toString() !== "Invalid Date") {
-            result.jaksaSejak = jaksaSejak;
-          }
+          result.jaksaSejak = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
         case "keterangan": {
@@ -252,10 +262,128 @@ export class ConverterData {
           break;
         }
         case "jabatanId":
-          result.jabatanId = parseInt(params[key]);
+          result.jabatanId = checkingNullAndConvertStringToNumber(params[key]);
           break;
         case "unitId":
-          result.unitId = parseInt(params[key]);
+          result.unitId = checkingNullAndConvertStringToNumber(params[key]);
+      }
+    });
+    return result;
+  };
+
+  static dynamicSortFieldConverter = (params: DynamicSelectFieldInput): SortFieldResult[] => {
+    const expectedSortField = [
+      "nama",
+      "tanggalLahir",
+      "pangkatSejak",
+      "jabatanSejak",
+      "PNSSejak",
+      "promotionYAD",
+      "jaksaSejak",
+      "unitId",
+    ];
+    const keysOfParams = Object.keys(params).filter((value) => expectedSortField.includes(value));
+    const result = [] as SortFieldResult[];
+    keysOfParams.map((key) => {
+      if (!["asc", "desc"].includes(params[key] as string))
+        throw new CustomResponseError({
+          name: "InvalidInputType",
+          statusCode: 400,
+          message: "Please Input ASC or DESC for ordering",
+        });
+      result.push({
+        field: key,
+        direction: params[key] as string,
+      });
+    });
+    return result;
+  };
+
+  static dynamicResultFieldConverter = (params: FilterField): DynamicSelectFieldInput => {
+    const result = {} as DynamicSelectFieldInput;
+    function checkingNull(param: string | null): string | null {
+      const string = param ? param : null;
+      return string;
+    }
+    function checkingNullAndConvertDate(param: Date | null): string | null {
+      const date = param ? param.toLocaleDateString() : "";
+      const string = date !== "Invalid Date" ? date : null;
+      return string;
+    }
+
+    Object.keys(params).forEach((key) => {
+      switch (key) {
+        case "gender":
+          result.gender = checkingNull(params[key]);
+          break;
+        case "tempatLahir":
+          result.tempatLahir = params[key];
+          break;
+        case "tanggalLahir": {
+          result.tanggalLahir = checkingNullAndConvertDate(params[key]);
+          break;
+        }
+        case "originalRank":
+          result.originalRank = params[key];
+          break;
+        case "pangkatSejak": {
+          result.pangkatSejak = checkingNullAndConvertDate(params[key]);
+          break;
+        }
+        case "namaJabatan":
+          result.namaJabatan = params[key];
+          break;
+        case "jabatanSejak": {
+          result.jabatanSejak = checkingNullAndConvertDate(params[key]);
+          break;
+        }
+        case "PNSSejak": {
+          result.PNSSejak = checkingNullAndConvertDate(params[key]);
+          break;
+        }
+        case "pendidikanTerakhir":
+          result.pendidikanTerakhir = params[key];
+          break;
+        case "promotionYAD":
+          {
+            result.promotionYAD = checkingNullAndConvertDate(params[key]);
+          }
+          break;
+        case "jaksa": {
+          if (params[key]) {
+            result.jaksa = "true";
+          }
+          break;
+        }
+        case "jaksaSejak": {
+          result.jaksaSejak = checkingNullAndConvertDate(params[key]);
+          break;
+        }
+        case "keterangan": {
+          result.keterangan = params[key];
+          break;
+        }
+        case "promotionChecking": {
+          if (params[key]) {
+            result.promotionChecking = "true";
+          }
+          break;
+        }
+        case "marker": {
+          if (params[key]) {
+            result.marker = "true";
+          }
+          break;
+        }
+        case "keteranganTambahan": {
+          result.keteranganTambahan = params[key] as string;
+          break;
+        }
+        case "jabatanId":
+          result.jabatanId = params[key]?.toString() as unknown as string;
+          break;
+        case "unitId":
+          result.unitId = params[key]?.toString() as unknown as string;
       }
     });
     return result;

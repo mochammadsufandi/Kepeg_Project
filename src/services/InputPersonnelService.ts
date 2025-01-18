@@ -29,12 +29,8 @@ class InputPersonnelService {
         promotionYAD: new Date(),
         promotionChecking: true,
       };
-      const genderConverter = parseInt(data.NIP.split(" ").join("")[14]);
-      if (genderConverter === 1) {
-        newObject.gender = "L";
-      } else if (genderConverter === 2) {
-        newObject.gender = "P";
-      }
+      const genderConverter = ConverterData.GenderConverter(data.NIP);
+      newObject.gender = genderConverter;
       const numericRankConverter = ConverterData.numericRankConverter(data.originalRank);
       newObject.numericRank = numericRankConverter;
       const promotionYAD = ConverterData.promotionYADConverter(data.pangkatSejak);
@@ -62,6 +58,7 @@ class InputPersonnelService {
       "tanggalLahir",
       "originalRank",
       "pangkatSejak",
+      "namaJabatan",
       "jabatanSejak",
       "pendidikanTerakhir",
       "jaksa",
