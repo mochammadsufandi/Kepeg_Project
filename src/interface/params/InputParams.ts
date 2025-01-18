@@ -27,29 +27,29 @@ export interface PromotionCheckingConverterInput {
 }
 
 export interface DynamicSelectFieldInput {
-  [key: string]: string;
+  [key: string]: string | null;
 }
 
 export interface SingleInputParams extends FormatDataMultiple {}
 
 export interface SingleEditParams {
-  NIP: string | undefined;
-  NRP: string | undefined;
-  nama: string | undefined;
-  tempatLahir: string | undefined;
-  tanggalLahir: Date | undefined;
-  originalRank: string | undefined;
-  pangkatSejak: Date | undefined;
-  jabatanSejak: Date | undefined;
-  PNSSejak: Date | undefined;
-  pendidikanTerakhir: string | undefined;
-  promotionYAD: Date | undefined;
-  jaksa: boolean | undefined;
-  jaksaSejak: Date | undefined;
-  namaJabatan: string | undefined;
-  jabatanId: number | undefined;
-  unitId: number | undefined;
-  gender: string | undefined;
-  marker: boolean | undefined;
-  keteranganTambahan: string | undefined;
+  NIP: string;
+  NRP: string;
+  nama: string;
+  tempatLahir: string;
+  tanggalLahir: Date;
+  originalRank: string;
+  pangkatSejak: Date;
+  jabatanSejak: Date;
+  PNSSejak: Date;
+  pendidikanTerakhir: string;
+  promotionYAD: Date;
+  jaksa: boolean;
+  jaksaSejak: Date;
+  namaJabatan: string;
+  jabatanId: number;
+  unitId: number;
+  gender: string;
+  marker: boolean;
+  keteranganTambahan: string;
 }

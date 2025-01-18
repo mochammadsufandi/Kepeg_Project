@@ -10,6 +10,7 @@ import {
   SortField,
   SortFieldResult,
 } from "../interface/params/SelectField";
+import CustomResponseError from "../middleware/errorClass/errorClass";
 const prisma = new PrismaClient();
 
 export class FilterService {
@@ -19,19 +20,25 @@ export class FilterService {
     let personnel = {} as PersonnelInterface | null;
     const selectionColumn = SelectField.dynamicColumn();
 
-    if (typeof params.nip === "string") {
+    if (typeof params.nip === "string" && params.nip.length > 0) {
       NIP = params.nip;
       personnel = await prisma.pegawai.findUnique({
         where: { NIP },
         select: selectionColumn,
       });
-    } else if (typeof params.nrp === "string") {
+    } else if (typeof params.nrp === "string" && params.nrp.length > 0) {
       NRP = params.nrp;
       personnel = await prisma.pegawai.findUnique({
         where: { NRP },
         select: selectionColumn,
       });
     }
+    if (!personnel)
+      throw new CustomResponseError({
+        name: "NoData",
+        statusCode: 400,
+        message: "Failed to Fetch Personnel",
+      });
 
     return personnel;
   }
@@ -59,6 +66,12 @@ export class FilterService {
         },
       },
     });
+    if (personnels.length === 0)
+      throw new CustomResponseError({
+        name: "NoData",
+        statusCode: 400,
+        message: "Failed To Fetch Personnel",
+      });
     return { personnel: personnels, count };
   }
 
@@ -66,7 +79,7 @@ export class FilterService {
     const filterFieldsInput = params.filterfields;
     const sortFieldsInput = params.sortfields;
     let filterFields = {} as FilterField;
-    let sortFields = {} as SortFieldResult[];
+    let sortFields = [] as SortFieldResult[];
     const selectionField = SelectField.dynamicColumn();
     if (filterFieldsInput) {
       const object = JSON.parse(filterFieldsInput as unknown as string);
@@ -82,7 +95,6 @@ export class FilterService {
     const keterangan = filterFields.keterangan as string;
     const keteranganTambahan = filterFields.keteranganTambahan as string;
     const namaJabatan = filterFields.namaJabatan as string;
-
     // Construct the orderBy array
     const orderBy = sortFields.map(({ field, direction }) => ({ [field]: direction }));
     let orderField = {} as SortField;
@@ -142,6 +154,12 @@ export class FilterService {
       },
       orderBy: orderBy,
     });
+    if (personnels.length === 0)
+      throw new CustomResponseError({
+        name: "NoData",
+        statusCode: 400,
+        message: "Failed to Fetch Personnels",
+      });
     return {
       personnels: personnels,
       filterField: filterFields,

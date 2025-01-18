@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import router from "./routes/main";
 import { errorHandler } from "./middleware/errorHandler";
+import cronJobForCheckingPromotion from "./cron/cronjob";
 
 const app = express();
 
@@ -10,10 +11,13 @@ dotenv.config();
 
 const port = process.env.PORT;
 
+cronJobForCheckingPromotion();
+
 app.use(
   cors({
-    origin: "http://localhost:3001",
-    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    origin: "http://192.168.100.163:3001",
+    allowedHeaders:
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization, sortFields, filterFields, nama, NIP, NRP",
     methods: "GET, POST, PUT, DELETE, PATCH, OPTIONS",
     optionsSuccessStatus: 200,
   })

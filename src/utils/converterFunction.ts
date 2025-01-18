@@ -85,7 +85,18 @@ export class ConverterData {
     return arrayObjectData;
   }
 
+  static GenderConverter(param: string): string {
+    const parseIntegerFromNIP = parseInt(param.split("").join("")[14]);
+    if (parseIntegerFromNIP === 1) {
+      return "L";
+    } else if (parseIntegerFromNIP === 2) {
+      return "P";
+    } else {
+      return "";
+    }
+  }
   static numericRankConverter(params: string): number {
+    if (!params) return 0;
     const originalRank = params.match(/\(.*?\)/g)?.[0];
     let numericRank = 0;
     switch (originalRank) {
@@ -143,6 +154,9 @@ export class ConverterData {
     }
     return numericRank;
   }
+  static originalRankConverter(param: string): string {
+    return "";
+  }
 
   static promotionYADConverter(params: Date): Date {
     const lastPromotionDate = new Date(params);
@@ -173,46 +187,43 @@ export class ConverterData {
 
   static dynamicFieldConverter = (params: DynamicSelectFieldInput): FilterField => {
     const result = {} as FilterField;
+    function checkingNullAndConvertStringToDate(param: string | null): Date | null {
+      const date = param !== null ? new Date(param) : new Date("");
+      if (date.toString() !== "Invalid Date") return date;
+      return null;
+    }
+    function checkingNullAndConvertStringToNumber(param: string | null): number | null {
+      const number = param !== null ? parseInt(param) : null;
+      return number;
+    }
     Object.keys(params).forEach((key) => {
       switch (key) {
         case "gender":
-          result.gender = params[key];
+          result.gender = params[key] as string;
           break;
         case "tempatLahir":
           result.tempatLahir = params[key];
           break;
         case "tanggalLahir": {
-          const tanggalLahir = new Date(params[key]);
-          if (tanggalLahir.toString() !== "Invalid Date") {
-            result.tanggalLahir = tanggalLahir;
-          }
+          result.tanggalLahir = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
         case "originalRank":
           result.originalRank = params[key];
           break;
         case "pangkatSejak": {
-          const pangkatSejak = new Date(params[key]);
-          if (pangkatSejak.toString() !== "Invalid Date") {
-            result.pangkatSejak = pangkatSejak;
-          }
+          result.pangkatSejak = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
         case "namaJabatan":
           result.namaJabatan = params[key];
           break;
         case "jabatanSejak": {
-          const jabatanSejak = new Date(params[key]);
-          if (jabatanSejak.toString() !== "Invalid Date") {
-            result.jabatanSejak = jabatanSejak;
-          }
+          result.jabatanSejak = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
         case "PNSSejak": {
-          const PNSSejak = new Date(params[key]);
-          if (PNSSejak.toString() !== "Invalid Date") {
-            result.PNSSejak = PNSSejak;
-          }
+          result.PNSSejak = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
         case "pendidikanTerakhir":
@@ -220,10 +231,7 @@ export class ConverterData {
 
           break;
         case "promotionYAD": {
-          const promotionYAD = new Date(params[key]);
-          if (promotionYAD.toString() !== "Invalid Date") {
-            result.promotionYAD = promotionYAD;
-          }
+          result.promotionYAD = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
         case "jaksa": {
@@ -232,10 +240,7 @@ export class ConverterData {
           break;
         }
         case "jaksaSejak": {
-          const jaksaSejak = new Date(params[key]);
-          if (jaksaSejak.toString() !== "Invalid Date") {
-            result.jaksaSejak = jaksaSejak;
-          }
+          result.jaksaSejak = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
         case "keterangan": {
@@ -257,10 +262,10 @@ export class ConverterData {
           break;
         }
         case "jabatanId":
-          result.jabatanId = parseInt(params[key]);
+          result.jabatanId = checkingNullAndConvertStringToNumber(params[key]);
           break;
         case "unitId":
-          result.unitId = parseInt(params[key]);
+          result.unitId = checkingNullAndConvertStringToNumber(params[key]);
       }
     });
     return result;
@@ -280,7 +285,7 @@ export class ConverterData {
     const keysOfParams = Object.keys(params).filter((value) => expectedSortField.includes(value));
     const result = [] as SortFieldResult[];
     keysOfParams.map((key) => {
-      if (!["asc", "desc"].includes(params[key]))
+      if (!["asc", "desc"].includes(params[key] as string))
         throw new CustomResponseError({
           name: "InvalidInputType",
           statusCode: 400,
@@ -288,7 +293,7 @@ export class ConverterData {
         });
       result.push({
         field: key,
-        direction: params[key],
+        direction: params[key] as string,
       });
     });
     return result;
@@ -296,59 +301,62 @@ export class ConverterData {
 
   static dynamicResultFieldConverter = (params: FilterField): DynamicSelectFieldInput => {
     const result = {} as DynamicSelectFieldInput;
+    function checkingNull(param: string | null): string | null {
+      const string = param ? param : null;
+      return string;
+    }
+    function checkingNullAndConvertDate(param: Date | null): string | null {
+      const date = param ? param.toLocaleDateString() : "";
+      const string = date !== "Invalid Date" ? date : null;
+      return string;
+    }
+
     Object.keys(params).forEach((key) => {
       switch (key) {
         case "gender":
-          result.gender = params[key];
+          result.gender = checkingNull(params[key]);
           break;
         case "tempatLahir":
           result.tempatLahir = params[key];
           break;
         case "tanggalLahir": {
-          const tanggalLahir = params[key].toLocaleDateString();
-          result.tanggalLahir = tanggalLahir;
+          result.tanggalLahir = checkingNullAndConvertDate(params[key]);
           break;
         }
         case "originalRank":
           result.originalRank = params[key];
           break;
         case "pangkatSejak": {
-          const pangkatSejak = params[key].toLocaleDateString();
-          result.pangkatSejak = pangkatSejak;
+          result.pangkatSejak = checkingNullAndConvertDate(params[key]);
           break;
         }
         case "namaJabatan":
           result.namaJabatan = params[key];
           break;
         case "jabatanSejak": {
-          const jabatanSejak = params[key].toLocaleDateString();
-          result.jabatanSejak = jabatanSejak;
+          result.jabatanSejak = checkingNullAndConvertDate(params[key]);
           break;
         }
         case "PNSSejak": {
-          const PNSSejak = params[key]?.toLocaleDateString() as string;
-          result.PNSSejak = PNSSejak;
+          result.PNSSejak = checkingNullAndConvertDate(params[key]);
           break;
         }
         case "pendidikanTerakhir":
           result.pendidikanTerakhir = params[key];
-
           break;
         case "promotionYAD":
           {
-            const promotionYAD = params[key].toLocaleDateString();
-            result.promotionYAD = promotionYAD;
+            result.promotionYAD = checkingNullAndConvertDate(params[key]);
           }
           break;
         case "jaksa": {
-          if (params.jaksa) {
+          if (params[key]) {
             result.jaksa = "true";
           }
           break;
         }
         case "jaksaSejak": {
-          const jaksaSejak = params[key]?.toLocaleDateString() as string;
-          result.jaksaSejak = jaksaSejak;
+          result.jaksaSejak = checkingNullAndConvertDate(params[key]);
           break;
         }
         case "keterangan": {

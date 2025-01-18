@@ -11,6 +11,7 @@ class ExportService {
     const filteredData = data?.personnels;
     const filterFields = data?.filterField as FilterField;
     const sortFields = data?.sortField;
+    const count = data?.count;
     if (!filteredData || !filterFields)
       throw new CustomResponseError({
         name: "NoData",
@@ -23,11 +24,9 @@ class ExportService {
     const filterResult = keyFilterFields.map((key) => {
       return `${key} : ${filterConvertToStringObject[key]}`;
     });
-    console.log(keySortFields);
     const sortResult = keySortFields.map((key) => {
       return `${key} : ${sortFields[key]}`;
     });
-    console.log(sortResult);
     const doc = new Document({
       styles: {
         paragraphStyles: [
@@ -79,6 +78,10 @@ class ExportService {
                   text: value,
                 })
             ),
+            new Paragraph({
+              text: `Jumlah : ${count}`,
+              spacing: { before: 300 },
+            }),
             new Table({
               rows: [
                 new TableRow({
@@ -108,7 +111,7 @@ class ExportService {
                               text:
                                 person.tempatLahir +
                                 ", " +
-                                person.tanggalLahir.toLocaleDateString(),
+                                person.tanggalLahir?.toLocaleDateString(),
                             }),
                             new Paragraph({ text: "NRP. " + person.NRP }),
                             new Paragraph({ text: "NIP. " + person.NIP }),
@@ -116,14 +119,14 @@ class ExportService {
                         }),
                         new TableCell({
                           children: [
-                            new Paragraph({ text: person.originalRank }),
-                            new Paragraph({ text: person.pangkatSejak.toLocaleDateString() }),
+                            new Paragraph({ text: person.originalRank as string | undefined }),
+                            new Paragraph({ text: person.pangkatSejak?.toLocaleDateString() }),
                           ],
                         }),
                         new TableCell({
                           children: [
                             new Paragraph({ text: person.jabatanId?.toString() }),
-                            new Paragraph({ text: person.jabatanSejak.toLocaleDateString() }),
+                            new Paragraph({ text: person.jabatanSejak?.toLocaleDateString() }),
                           ],
                         }),
                         new TableCell({
@@ -132,11 +135,15 @@ class ExportService {
                           ],
                         }),
                         new TableCell({
-                          children: [new Paragraph({ text: person.pendidikanTerakhir })],
+                          children: [
+                            new Paragraph({
+                              text: person.pendidikanTerakhir as string | undefined,
+                            }),
+                          ],
                         }),
                         new TableCell({
                           children: [
-                            new Paragraph({ text: person.promotionYAD.toLocaleDateString() }),
+                            new Paragraph({ text: person.promotionYAD?.toLocaleDateString() }),
                           ],
                         }),
                         new TableCell({
@@ -144,7 +151,11 @@ class ExportService {
                             new Paragraph({ text: person.jaksaSejak?.toLocaleDateString() }),
                           ],
                         }),
-                        new TableCell({ children: [new Paragraph({ text: person.keterangan })] }),
+                        new TableCell({
+                          children: [
+                            new Paragraph({ text: person.keterangan as string | undefined }),
+                          ],
+                        }),
                       ],
                     })
                 ),
