@@ -5,12 +5,17 @@ import { Pegawai, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 class EditService {
-  static async editPersonnel(params: Pegawai): Promise<void> {
-    const editField = { ...params, numericRank: 0, promotionChecking: false };
-
+  static async editPersonnel({ data, NIP }: { data: Pegawai; NIP: string }): Promise<void> {
+    const editField = { ...data, numericRank: 0, promotionChecking: false };
+    if (!NIP)
+      throw new CustomResponseError({
+        name: "InvalidRequestQuery",
+        statusCode: 400,
+        message: "No NIP in Request Query",
+      });
     const existingPersonnel = await prisma.pegawai.findUnique({
       where: {
-        NIP: editField.NIP,
+        NIP: NIP,
       },
     });
 
@@ -23,60 +28,106 @@ class EditService {
 
     if (editField.tanggalLahir) {
       const tanggalLahir = new Date(editField.tanggalLahir);
-      const timeZoneOffset = tanggalLahir.getTimezoneOffset() / 60;
-      tanggalLahir.setHours(tanggalLahir.getHours() - timeZoneOffset);
-      if (tanggalLahir.toString() !== "Invalid Date") {
-        editField.tanggalLahir = tanggalLahir;
+      if (!isNaN(tanggalLahir.getTime())) {
+        const date = new Date(
+          Date.UTC(
+            tanggalLahir.getFullYear(),
+            tanggalLahir.getMonth(),
+            tanggalLahir.getDate(),
+            0,
+            0,
+            0,
+            0
+          )
+        );
+        editField.tanggalLahir = date;
       } else {
         editField.tanggalLahir = null;
       }
     }
     if (editField.pangkatSejak) {
       const pangkatSejak = new Date(editField.pangkatSejak);
-      const timeZoneOffset = pangkatSejak.getTimezoneOffset() / 60;
-      pangkatSejak.setHours(pangkatSejak.getHours() - timeZoneOffset);
-      if (pangkatSejak.toString() !== "Invalid Date") {
-        editField.pangkatSejak = pangkatSejak;
+      if (!isNaN(pangkatSejak.getTime())) {
+        const date = new Date(
+          Date.UTC(
+            pangkatSejak.getFullYear(),
+            pangkatSejak.getMonth(),
+            pangkatSejak.getDate(),
+            0,
+            0,
+            0,
+            0
+          )
+        );
+        editField.pangkatSejak = date;
       } else {
         editField.pangkatSejak = null;
       }
     }
     if (editField.jabatanSejak) {
       const jabatanSejak = new Date(editField.jabatanSejak);
-      const timeZoneOffset = jabatanSejak.getTimezoneOffset() / 60;
-      jabatanSejak.setHours(jabatanSejak.getHours() - timeZoneOffset);
-      if (jabatanSejak.toString() !== "Invalid Date") {
-        editField.jabatanSejak = jabatanSejak;
+      if (!isNaN(jabatanSejak.getTime())) {
+        const date = new Date(
+          Date.UTC(
+            jabatanSejak.getFullYear(),
+            jabatanSejak.getMonth(),
+            jabatanSejak.getDate(),
+            0,
+            0,
+            0,
+            0
+          )
+        );
+        editField.jabatanSejak = date;
       } else {
         editField.jabatanSejak = null;
       }
     }
     if (editField.PNSSejak) {
       const PNSSejak = new Date(editField.PNSSejak);
-      const timeZoneOffset = PNSSejak.getTimezoneOffset() / 60;
-      PNSSejak.setHours(PNSSejak.getHours() - timeZoneOffset);
-      if (PNSSejak.toString() !== "Invalid Date") {
-        editField.PNSSejak = PNSSejak;
+      if (!isNaN(PNSSejak.getTime())) {
+        const date = new Date(
+          Date.UTC(PNSSejak.getFullYear(), PNSSejak.getMonth(), PNSSejak.getDate(), 0, 0, 0, 0)
+        );
+        editField.PNSSejak = date;
       } else {
         editField.PNSSejak = null;
       }
     }
     if (editField.promotionYAD) {
       const promotionYAD = new Date(editField.promotionYAD);
-      const timeZoneOffset = promotionYAD.getTimezoneOffset() / 60;
-      promotionYAD.setHours(promotionYAD.getHours() - timeZoneOffset);
-      if (promotionYAD.toString() !== "Invalid Date") {
-        editField.promotionYAD = promotionYAD;
+      if (!isNaN(promotionYAD.getTime())) {
+        const date = new Date(
+          Date.UTC(
+            promotionYAD.getFullYear(),
+            promotionYAD.getMonth(),
+            promotionYAD.getDate(),
+            0,
+            0,
+            0,
+            0
+          )
+        );
+        editField.promotionYAD = date;
       } else {
         editField.promotionYAD = null;
       }
     }
     if (editField.jaksaSejak) {
       const jaksaSejak = new Date(editField.jaksaSejak);
-      const timeZoneOffset = jaksaSejak.getTimezoneOffset() / 60;
-      jaksaSejak.setHours(jaksaSejak.getHours() - timeZoneOffset);
-      if (jaksaSejak.toString() !== "Invalid Date") {
-        editField.jaksaSejak = jaksaSejak;
+      if (!isNaN(jaksaSejak.getTime())) {
+        const date = new Date(
+          Date.UTC(
+            jaksaSejak.getFullYear(),
+            jaksaSejak.getMonth(),
+            jaksaSejak.getDate(),
+            0,
+            0,
+            0,
+            0
+          )
+        );
+        editField.jaksaSejak = date;
       } else {
         editField.jaksaSejak = null;
       }
@@ -115,7 +166,6 @@ class EditService {
     } else if (editField.marker?.toString() === "false") {
       editField.marker = false;
     }
-    console.log(editField);
 
     await prisma.pegawai.update({
       where: {

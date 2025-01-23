@@ -31,7 +31,7 @@ export class ConverterData {
             break;
           case 4: {
             const [day, month, year] = value.split("-").map(Number);
-            obj["tanggalLahir"] = new Date(Date.UTC(year, month - 1, day));
+            obj["tanggalLahir"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
             break;
           }
           case 5:
@@ -40,14 +40,14 @@ export class ConverterData {
           case 6:
             // eslint-disable-next-line no-case-declarations
             const [day, month, year] = value.split("-").map(Number);
-            obj["pangkatSejak"] = new Date(Date.UTC(year, month - 1, day));
+            obj["pangkatSejak"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
             break;
           case 7:
             obj["namaJabatan"] = value;
             break;
           case 8: {
             const [day, month, year] = value.split("-").map(Number);
-            obj["jabatanSejak"] = new Date(Date.UTC(year, month - 1, day));
+            obj["jabatanSejak"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
             break;
           }
           case 9: {
@@ -55,7 +55,7 @@ export class ConverterData {
             if (value === "-") {
               obj["PNSSejak"] = null;
             } else {
-              obj["PNSSejak"] = new Date(Date.UTC(year, month - 1, day));
+              obj["PNSSejak"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
             }
             break;
           }
@@ -67,7 +67,7 @@ export class ConverterData {
             if (value === "-") {
               obj["jaksaSejak"] = null;
             } else {
-              obj["jaksaSejak"] = new Date(Date.UTC(year, month - 1, day));
+              obj["jaksaSejak"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
             }
             break;
           }
@@ -252,7 +252,7 @@ export class ConverterData {
           result = "Ajun Jaksa Madya (III/a)";
           break;
         default:
-          result = null;
+          result = originalRank;
       }
     } else {
       switch (originalRank) {
@@ -284,7 +284,7 @@ export class ConverterData {
           result = "Yuana Darma (II/a)";
           break;
         default:
-          result = null;
+          result = originalRank;
       }
     }
     return result;
@@ -425,6 +425,8 @@ export class ConverterData {
     const expectedSortField = [
       "nama",
       "tanggalLahir",
+      "tempatLahir",
+      "numericRank",
       "pangkatSejak",
       "jabatanSejak",
       "PNSSejak",

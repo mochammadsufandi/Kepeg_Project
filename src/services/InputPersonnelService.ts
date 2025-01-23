@@ -82,50 +82,87 @@ class InputPersonnelService {
     inputField.gender = ConverterData.GenderConverter(inputField.NIP);
     if (inputField.tanggalLahir) {
       const tanggalLahir = new Date(inputField.tanggalLahir);
-      const timeZoneOffset = tanggalLahir.getTimezoneOffset() / 60;
-      tanggalLahir.setHours(tanggalLahir.getHours() - timeZoneOffset);
-      if (tanggalLahir.toString() !== "Invalid Date") {
-        inputField.tanggalLahir = tanggalLahir;
+      if (!isNaN(tanggalLahir.getTime())) {
+        const date = new Date(
+          Date.UTC(
+            tanggalLahir.getFullYear(),
+            tanggalLahir.getMonth(),
+            tanggalLahir.getDate(),
+            0,
+            0,
+            0,
+            0
+          )
+        );
+        inputField.tanggalLahir = date;
       } else {
         inputField.tanggalLahir = null;
       }
     }
     if (inputField.pangkatSejak) {
       const pangkatSejak = new Date(inputField.pangkatSejak);
-      const timeZoneOffset = pangkatSejak.getTimezoneOffset() / 60;
-      pangkatSejak.setHours(pangkatSejak.getHours() - timeZoneOffset);
-      if (pangkatSejak.toString() !== "Invalid Date") {
-        inputField.pangkatSejak = pangkatSejak;
+      if (!isNaN(pangkatSejak.getTime())) {
+        const date = new Date(
+          Date.UTC(
+            pangkatSejak.getFullYear(),
+            pangkatSejak.getMonth(),
+            pangkatSejak.getDate(),
+            0,
+            0,
+            0,
+            0
+          )
+        );
+        inputField.pangkatSejak = date;
       } else {
         inputField.pangkatSejak = null;
       }
     }
     if (inputField.jabatanSejak) {
       const jabatanSejak = new Date(inputField.jabatanSejak);
-      const timeZoneOffset = jabatanSejak.getTimezoneOffset() / 60;
-      jabatanSejak.setHours(jabatanSejak.getHours() - timeZoneOffset);
-      if (jabatanSejak.toString() !== "Invalid Date") {
-        inputField.jabatanSejak = jabatanSejak;
+      if (!isNaN(jabatanSejak.getTime())) {
+        const date = new Date(
+          Date.UTC(
+            jabatanSejak.getFullYear(),
+            jabatanSejak.getMonth(),
+            jabatanSejak.getDate(),
+            0,
+            0,
+            0,
+            0
+          )
+        );
+        inputField.jabatanSejak = date;
       } else {
         inputField.jabatanSejak = null;
       }
     }
     if (inputField.PNSSejak) {
       const PNSSejak = new Date(inputField.PNSSejak);
-      const timeZoneOffset = PNSSejak.getTimezoneOffset() / 60;
-      PNSSejak.setHours(PNSSejak.getHours() - timeZoneOffset);
-      if (PNSSejak.toString() !== "Invalid Date") {
-        inputField.PNSSejak = PNSSejak;
+      if (!isNaN(PNSSejak.getTime())) {
+        const date = new Date(
+          Date.UTC(PNSSejak.getFullYear(), PNSSejak.getMonth(), PNSSejak.getDate(), 0, 0, 0, 0)
+        );
+        inputField.PNSSejak = date;
       } else {
         inputField.PNSSejak = null;
       }
     }
     if (inputField.jaksaSejak) {
       const jaksaSejak = new Date(inputField.jaksaSejak);
-      const timeZoneOffset = jaksaSejak.getTimezoneOffset() / 60;
-      jaksaSejak.setHours(jaksaSejak.getHours() - timeZoneOffset);
-      if (jaksaSejak.toString() !== "Invalid Date") {
-        inputField.jaksaSejak = jaksaSejak;
+      if (!isNaN(jaksaSejak.getTime())) {
+        const date = new Date(
+          Date.UTC(
+            jaksaSejak.getFullYear(),
+            jaksaSejak.getMonth(),
+            jaksaSejak.getDate(),
+            0,
+            0,
+            0,
+            0
+          )
+        );
+        inputField.jaksaSejak = date;
       } else {
         inputField.jaksaSejak = null;
       }
@@ -162,7 +199,6 @@ class InputPersonnelService {
             numericRank: inputField.numericRank,
           })
         : null;
-    console.log(inputField);
     const existingPersonnel = await prisma.pegawai.findUnique({
       where: {
         NIP: inputField.NIP,

@@ -33,6 +33,7 @@ export interface FilterField extends Omit<Pegawai, "NIP" | "NRP" | "nama"> {}
 export interface SortField {
   nama: string | undefined;
   tanggalLahir: string | undefined;
+  tempatLahir: string | undefined;
   numericRank: string | undefined;
   pangkatSejak: string | undefined;
   jabatanSejak: string | undefined;

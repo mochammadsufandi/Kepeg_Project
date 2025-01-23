@@ -1,13 +1,13 @@
-import { DynamicSelectFieldInput } from "../interface/params/InputParams";
+import { DynamicSelectFieldInput, SingleEditParams } from "../interface/params/InputParams";
 import CustomResponseError from "../middleware/errorClass/errorClass";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 class DeleteService {
-  static async marker(params: DynamicSelectFieldInput): Promise<void> {
+  static async marker(params: SingleEditParams): Promise<void> {
     const { NIP, marker } = params;
-    let boolMarker: boolean = false;
+    let boolMarker: boolean;
     if (!NIP)
       throw new CustomResponseError({
         name: "InvalidInput",
@@ -23,8 +23,10 @@ class DeleteService {
         statusCode: 400,
         message: "Personnel is Not Found",
       });
-    if (marker && marker === "true") {
+    if (marker) {
       boolMarker = true;
+    } else {
+      boolMarker = false;
     }
     await prisma.pegawai.update({
       where: { NIP },
