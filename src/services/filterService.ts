@@ -95,6 +95,7 @@ export class FilterService {
     const keterangan = filterFields.keterangan as string;
     const keteranganTambahan = filterFields.keteranganTambahan as string;
     const namaJabatan = filterFields.namaJabatan as string;
+    // const pangkatSejak = filterFields.pangkatSejak?.toISOString().split("T")[0];
     // Construct the orderBy array
     const orderBy = sortFields.map(({ field, direction }) => ({ [field]: direction }));
     let orderField = {} as SortField;
