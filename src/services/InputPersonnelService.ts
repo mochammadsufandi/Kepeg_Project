@@ -167,10 +167,9 @@ class InputPersonnelService {
         inputField.jaksaSejak = null;
       }
     }
-    inputField.promotionYAD =
-      inputField.pangkatSejak !== null
-        ? ConverterData.promotionYADConverter(inputField.pangkatSejak)
-        : null;
+    inputField.promotionYAD = inputField.pangkatSejak
+      ? ConverterData.promotionYADConverter(inputField.pangkatSejak)
+      : null;
     if (inputField.jaksa?.toString() === "true") {
       inputField.jaksa = true;
     } else if (inputField.jaksa?.toString() === "false") {
