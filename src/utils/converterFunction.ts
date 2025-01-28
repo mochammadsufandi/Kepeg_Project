@@ -9,9 +9,9 @@ import CustomResponseError from "../middleware/errorClass/errorClass";
 export class ConverterData {
   static arrangeArrayObjectData(data: string[]): FormatDataMultiple[] {
     const arrayObjectData: FormatDataMultiple[] = [];
-    const chunkSize = 14;
+    const chunkSize = 15;
 
-    for (let i = 14; i < data.length; i += chunkSize) {
+    for (let i = 15; i < data.length; i += chunkSize) {
       const chunk = data.slice(i, i + chunkSize);
 
       const obj = {} as FormatDataMultiple;
@@ -76,6 +76,9 @@ export class ConverterData {
             break;
           case 13:
             obj["unitId"] = parseInt(value);
+            break;
+          case 14:
+            obj["eselon"] = value;
             break;
         }
       });
@@ -360,6 +363,9 @@ export class ConverterData {
         }
         case "originalRank":
           result.originalRank = params[key];
+          break;
+        case "eselon":
+          result.eselon = params[key];
           break;
         case "pangkatSejak": {
           result.pangkatSejak = checkingNullAndConvertStringToDate(params[key]);

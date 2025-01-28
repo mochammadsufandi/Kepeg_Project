@@ -10,6 +10,7 @@ export interface SelectFieldInterface {
   tempatLahir: boolean | undefined;
   tanggalLahir: boolean | undefined;
   originalRank: boolean | undefined;
+  eselon: boolean | undefined;
   pangkatSejak: boolean | undefined;
   jabatanSejak: boolean | undefined;
   PNSSejak: boolean | undefined;

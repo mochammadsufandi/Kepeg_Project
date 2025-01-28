@@ -10,6 +10,7 @@ export class SelectField {
       tempatLahir: true,
       tanggalLahir: true,
       originalRank: true,
+      eselon: true,
       pangkatSejak: true,
       jabatanSejak: true,
       PNSSejak: true,

@@ -23,6 +23,7 @@ model Pegawai {
   tanggalLahir DateTime?
   originalRank String?
   numericRank Int?
+  eselon String?
   pangkatSejak DateTime?
   jabatanSejak DateTime?
   PNSSejak DateTime?

@@ -7,7 +7,6 @@ import CustomResponseError from "../middleware/errorClass/errorClass";
 const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback): void => {
   const allowedExtension = [".docx", ".doc"];
   const fileExtension = path.extname(file.originalname).toLowerCase();
-  console.log(fileExtension);
 
   if (allowedExtension.includes(fileExtension)) {
     cb(null, true);
