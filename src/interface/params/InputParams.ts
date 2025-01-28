@@ -9,6 +9,7 @@ export interface FormatDataMultiple {
   tempatLahir: string;
   tanggalLahir: Date;
   originalRank: string;
+  eselon: string;
   pangkatSejak: Date;
   jabatanSejak: Date;
   PNSSejak: Date | null;
@@ -37,6 +38,7 @@ export interface SingleInputParams {
   tempatLahir: string | null;
   tanggalLahir: Date | null;
   originalRank: string | null;
+  eselon: string | null;
   pangkatSejak: Date | null;
   jabatanSejak: Date | null;
   PNSSejak: Date | null;
