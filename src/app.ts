@@ -9,7 +9,7 @@ const app = express();
 
 dotenv.config();
 
-const port = process.env.PORT;
+const port = Number(process.env.PORT);
 
 cronJobForCheckingPromotion();
 
@@ -29,6 +29,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", router);
 app.use(errorHandler);
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`Server is listening on PORT : ${port}`);
 });
