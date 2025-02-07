@@ -295,6 +295,7 @@ export class ConverterData {
 
   static promotionYADConverter(params: Date): Date {
     let lastPromotionDate: Date = new Date(params);
+    // console.log(params);
     const day = lastPromotionDate.getDate();
     const month = lastPromotionDate.getMonth();
     const year = lastPromotionDate.getFullYear();

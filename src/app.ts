@@ -15,11 +15,13 @@ cronJobForCheckingPromotion();
 
 app.use(
   cors({
-    origin: "http://192.168.100.163:3001",
-    allowedHeaders:
-      "Origin, X-Requested-With, Content-Type, Accept, Authorization, sortFields, filterFields, nama, NIP, NRP",
-    methods: "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-    optionsSuccessStatus: 200,
+    origin: function (origin, callback) {
+      if (!origin || origin.startsWith("http://192.168.1.")) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
   })
 );
 
