@@ -33,6 +33,7 @@ class InputPersonnelService {
       newObject.gender = genderConverter;
       const numericRankConverter = ConverterData.numericRankConverter(data.originalRank);
       newObject.numericRank = numericRankConverter;
+      // console.log(data);
       const promotionYAD = ConverterData.promotionYADConverter(data.pangkatSejak);
       newObject.promotionYAD = promotionYAD;
       const promotionCheckingConverter = ConverterData.promotionCheckingConverter({
