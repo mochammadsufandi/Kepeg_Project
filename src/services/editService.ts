@@ -18,7 +18,6 @@ class EditService {
         NIP: NIP,
       },
     });
-
     if (!existingPersonnel)
       throw new CustomResponseError({
         name: "PersonnelNotFound",
@@ -26,7 +25,7 @@ class EditService {
         message: "Personnel is Not Found",
       });
 
-    if (editField.tanggalLahir) {
+    if (editField.tanggalLahir || editField.tanggalLahir === "") {
       const tanggalLahir = new Date(editField.tanggalLahir);
       if (!isNaN(tanggalLahir.getTime())) {
         const date = new Date(
@@ -45,7 +44,7 @@ class EditService {
         editField.tanggalLahir = null;
       }
     }
-    if (editField.pangkatSejak) {
+    if (editField.pangkatSejak || editField.pangkatSejak === "") {
       const pangkatSejak = new Date(editField.pangkatSejak);
       if (!isNaN(pangkatSejak.getTime())) {
         const date = new Date(
@@ -64,7 +63,29 @@ class EditService {
         editField.pangkatSejak = null;
       }
     }
-    if (editField.jabatanSejak) {
+    if (editField.promotionYAD && editField.pangkatSejak) {
+      const promotionYAD = new Date(editField.promotionYAD);
+      if (!isNaN(promotionYAD.getTime())) {
+        const date = new Date(
+          Date.UTC(
+            promotionYAD.getFullYear(),
+            promotionYAD.getMonth(),
+            promotionYAD.getDate(),
+            0,
+            0,
+            0
+          )
+        );
+        editField.promotionYAD = date;
+      } else {
+        editField.promotionYAD = null;
+      }
+    } else if (!editField.promotionYAD && editField.pangkatSejak) {
+      editField.promotionYAD = ConverterData.promotionYADConverter(editField.pangkatSejak);
+    } else {
+      editField.promotionYAD = null;
+    }
+    if (editField.jabatanSejak || editField.jabatanSejak === "") {
       const jabatanSejak = new Date(editField.jabatanSejak);
       if (!isNaN(jabatanSejak.getTime())) {
         const date = new Date(
@@ -83,7 +104,7 @@ class EditService {
         editField.jabatanSejak = null;
       }
     }
-    if (editField.PNSSejak) {
+    if (editField.PNSSejak || editField.PNSSejak === "") {
       const PNSSejak = new Date(editField.PNSSejak);
       if (!isNaN(PNSSejak.getTime())) {
         const date = new Date(
@@ -94,26 +115,7 @@ class EditService {
         editField.PNSSejak = null;
       }
     }
-    if (editField.promotionYAD) {
-      const promotionYAD = new Date(editField.promotionYAD);
-      if (!isNaN(promotionYAD.getTime())) {
-        const date = new Date(
-          Date.UTC(
-            promotionYAD.getFullYear(),
-            promotionYAD.getMonth(),
-            promotionYAD.getDate(),
-            0,
-            0,
-            0,
-            0
-          )
-        );
-        editField.promotionYAD = date;
-      } else {
-        editField.promotionYAD = null;
-      }
-    }
-    if (editField.jaksaSejak) {
+    if (editField.jaksaSejak || editField.jaksaSejak === "") {
       const jaksaSejak = new Date(editField.jaksaSejak);
       if (!isNaN(jaksaSejak.getTime())) {
         const date = new Date(
@@ -134,7 +136,7 @@ class EditService {
     }
     if (editField.jaksa?.toString() === "true") {
       editField.jaksa = true;
-    } else if (editField.jaksa?.toString() === "false") {
+    } else if (editField.jaksa?.toString() === "false" || !editField.jaksa) {
       editField.jaksa = false;
     }
     if (editField.NIP) {
@@ -145,6 +147,8 @@ class EditService {
     }
     if (editField.unitId) {
       editField.unitId = parseInt(editField.unitId?.toString() as string);
+    } else {
+      editField.unitId = null;
     }
     if (editField.jaksa !== null && editField.originalRank !== null) {
       editField.originalRank = ConverterData.originalRankFullConverter({
@@ -169,7 +173,7 @@ class EditService {
 
     await prisma.pegawai.update({
       where: {
-        NIP: editField.NIP,
+        NIP: existingPersonnel.NIP,
       },
       data: editField,
     });

@@ -125,7 +125,7 @@ class ExportService {
                         }),
                         new TableCell({
                           children: [
-                            new Paragraph({ text: person.jabatanId?.toString() }),
+                            new Paragraph({ text: person.namaJabatan as string }),
                             new Paragraph({ text: person.jabatanSejak?.toLocaleDateString() }),
                           ],
                         }),

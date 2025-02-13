@@ -1,5 +1,9 @@
 import mammoth from "mammoth";
-import { SingleInputParams, InputMultipleParams } from "../interface/params/InputParams";
+import {
+  SingleInputParams,
+  InputMultipleParams,
+  FormatDataMultiple,
+} from "../interface/params/InputParams";
 import CustomResponseError from "../middleware/errorClass/errorClass";
 import { ConverterData } from "../utils/converterFunction";
 import { PrismaClient } from "@prisma/client";
@@ -22,25 +26,37 @@ class InputPersonnelService {
 
     const data = ConverterData.arrangeArrayObjectData(extractResultArray);
     const convertData = data.map((data) => {
-      const newObject = {
+      const newObject: FormatDataMultiple & {
+        gender: string;
+        numericRank: number;
+        promotionYAD: Date | null;
+        promotionChecking: boolean;
+      } = {
         ...data,
         gender: "",
         numericRank: 0,
-        promotionYAD: new Date(),
+        promotionYAD: null,
         promotionChecking: true,
       };
       const genderConverter = ConverterData.GenderConverter(data.NIP);
       newObject.gender = genderConverter;
       const numericRankConverter = ConverterData.numericRankConverter(data.originalRank);
       newObject.numericRank = numericRankConverter;
-      // console.log(data);
-      const promotionYAD = ConverterData.promotionYADConverter(data.pangkatSejak);
-      newObject.promotionYAD = promotionYAD;
-      const promotionCheckingConverter = ConverterData.promotionCheckingConverter({
-        pendidikanTerakhir: newObject.pendidikanTerakhir,
-        numericRank: newObject.numericRank,
-      });
-      newObject.promotionChecking = promotionCheckingConverter;
+      if (data.pangkatSejak) {
+        const promotionYAD = ConverterData.promotionYADConverter(data.pangkatSejak);
+        newObject.promotionYAD = promotionYAD;
+      } else {
+        newObject.promotionYAD = null;
+      }
+      if (newObject.pendidikanTerakhir) {
+        const promotionCheckingConverter = ConverterData.promotionCheckingConverter({
+          pendidikanTerakhir: newObject.pendidikanTerakhir,
+          numericRank: newObject.numericRank,
+        });
+        newObject.promotionChecking = promotionCheckingConverter;
+      } else {
+        newObject.promotionChecking = false;
+      }
       return newObject;
     });
     await prisma.pegawai.createMany({

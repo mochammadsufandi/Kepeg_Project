@@ -26,41 +26,68 @@ export class ConverterData {
           case 2:
             obj["nama"] = value;
             break;
-          case 3:
-            obj["tempatLahir"] = value;
-            break;
-          case 4: {
-            const [day, month, year] = value.split("-").map(Number);
-            obj["tanggalLahir"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
-            break;
-          }
-          case 5:
-            obj["originalRank"] = value;
-            break;
-          case 6:
-            // eslint-disable-next-line no-case-declarations
-            const [day, month, year] = value.split("-").map(Number);
-            obj["pangkatSejak"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
-            break;
-          case 7:
-            obj["namaJabatan"] = value;
-            break;
-          case 8: {
-            const [day, month, year] = value.split("-").map(Number);
-            obj["jabatanSejak"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
-            break;
-          }
-          case 9: {
-            const [day, month, year] = value.split("-").map(Number);
+          case 3: {
             if (value === "-") {
-              obj["PNSSejak"] = null;
+              obj["tempatLahir"] = null;
             } else {
-              obj["PNSSejak"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+              obj["tempatLahir"] = value;
             }
             break;
           }
+          case 4: {
+            if (value === "-") {
+              obj["tanggalLahir"] = null;
+            } else {
+              const [day, month, year] = value.split("-").map(Number);
+              obj["tanggalLahir"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+            }
+            break;
+          }
+          case 5:
+            if (value === "-") {
+              obj["originalRank"] = null;
+            } else {
+              obj["originalRank"] = value;
+            }
+            break;
+          case 6:
+            if (value === "-") {
+              obj["pangkatSejak"] = null;
+            } else {
+              const [day, month, year] = value.split("-").map(Number);
+              obj["pangkatSejak"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+            }
+            break;
+          case 7:
+            if (value === "-") {
+              obj["namaJabatan"] = null;
+            } else {
+              obj["namaJabatan"] = value;
+            }
+            break;
+          case 8: {
+            if (value === "-") {
+              obj["jabatanSejak"] = null;
+            } else {
+              const [day, month, year] = value.split("-").map(Number);
+              obj["jabatanSejak"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+            }
+            break;
+          }
+          case 9:
+            if (value === "-") {
+              obj["PNSSejak"] = null;
+            } else {
+              const [day, month, year] = value.split("-").map(Number);
+              obj["PNSSejak"] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+            }
+            break;
           case 10:
-            obj["pendidikanTerakhir"] = value;
+            if (value === "-") {
+              obj["pendidikanTerakhir"] = null;
+            } else {
+              obj["pendidikanTerakhir"] = value;
+            }
             break;
           case 11: {
             const [day, month, year] = value.split("-").map(Number);
@@ -72,17 +99,33 @@ export class ConverterData {
             break;
           }
           case 12:
-            obj["keterangan"] = value;
+            if (value === "-") {
+              obj["keterangan"] = null;
+            } else {
+              obj["keterangan"] = value;
+            }
             break;
           case 13:
-            obj["unitId"] = parseInt(value);
+            if (value === "-") {
+              obj["unitId"] = null;
+            } else {
+              obj["unitId"] = parseInt(value);
+            }
             break;
           case 14:
-            obj["eselon"] = value;
+            if (value === "-") {
+              obj["eselon"] = null;
+            } else {
+              obj["eselon"] = value;
+            }
             break;
         }
       });
-      if (obj["jaksaSejak"]) obj["jaksa"] = true;
+      if (obj["jaksaSejak"]) {
+        obj["jaksa"] = true;
+      } else {
+        obj["jaksa"] = false;
+      }
       arrayObjectData.push(obj);
     }
     return arrayObjectData;
@@ -98,7 +141,7 @@ export class ConverterData {
       return "";
     }
   }
-  static numericRankConverter(params: string): number {
+  static numericRankConverter(params: string | null): number {
     if (!params) return 0;
     const originalRank = params.match(/\(.*?\)/g)?.[0];
     let numericRank = 0;
@@ -142,16 +185,16 @@ export class ConverterData {
       case "(II/a)":
         numericRank = 5;
         break;
-      case "(Id)":
+      case "(I/d)":
         numericRank = 4;
         break;
-      case "(Ic)":
+      case "(I/c)":
         numericRank = 3;
         break;
-      case "Ib":
+      case "I/b":
         numericRank = 2;
         break;
-      case "Ia":
+      case "I/a":
         numericRank = 1;
         break;
     }
@@ -347,7 +390,7 @@ export class ConverterData {
       return null;
     }
     function checkingNullAndConvertStringToNumber(param: string | null): number | null {
-      const number = param !== null ? parseInt(param) : null;
+      const number = param ? parseInt(param) : null;
       return number;
     }
     Object.keys(params).forEach((key) => {
@@ -362,8 +405,8 @@ export class ConverterData {
           result.tanggalLahir = checkingNullAndConvertStringToDate(params[key]);
           break;
         }
-        case "originalRank":
-          result.originalRank = params[key];
+        case "numericRank":
+          result.numericRank = this.numericRankConverter(params[key]);
           break;
         case "eselon":
           result.eselon = params[key];
@@ -482,8 +525,8 @@ export class ConverterData {
           result.tanggalLahir = checkingNullAndConvertDate(params[key]);
           break;
         }
-        case "originalRank":
-          result.originalRank = params[key];
+        case "numericRank":
+          result.originalRank = this.originalRankConverter(params[key] as number);
           break;
         case "pangkatSejak": {
           result.pangkatSejak = checkingNullAndConvertDate(params[key]);

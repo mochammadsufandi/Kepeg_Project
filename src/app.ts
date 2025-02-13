@@ -16,7 +16,7 @@ cronJobForCheckingPromotion();
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || origin.startsWith("http://192.168.1.")) {
+      if (!origin || origin.startsWith("http://192.168.100.")) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));

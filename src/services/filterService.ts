@@ -155,6 +155,9 @@ export class FilterService {
       },
       orderBy: orderBy,
     });
+    if (filterFields.numericRank) {
+      filterFields.originalRank = ConverterData.originalRankConverter(filterFields.numericRank);
+    }
     if (personnels.length === 0)
       throw new CustomResponseError({
         name: "NoData",
