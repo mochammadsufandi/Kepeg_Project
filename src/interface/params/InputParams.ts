@@ -6,18 +6,18 @@ export interface FormatDataMultiple {
   NIP: string;
   NRP: string;
   nama: string;
-  tempatLahir: string;
-  tanggalLahir: Date;
-  originalRank: string;
-  eselon: string;
-  pangkatSejak: Date;
-  jabatanSejak: Date;
+  tempatLahir: string | null;
+  tanggalLahir: Date | null;
+  originalRank: string | null;
+  eselon: string | null;
+  pangkatSejak: Date | null;
+  jabatanSejak: Date | null;
   PNSSejak: Date | null;
-  pendidikanTerakhir: string;
+  pendidikanTerakhir: string | null;
   jaksa: boolean;
   jaksaSejak: Date | null;
-  namaJabatan: string;
-  keterangan: string;
+  namaJabatan: string | null;
+  keterangan: string | null;
   jabatanId: number | null;
   unitId: number | null;
 }
