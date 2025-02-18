@@ -473,6 +473,7 @@ export class ConverterData {
 
   static dynamicSortFieldConverter = (params: DynamicSelectFieldInput): SortFieldResult[] => {
     const expectedSortField = [
+      "id",
       "nama",
       "tanggalLahir",
       "tempatLahir",
@@ -532,6 +533,9 @@ export class ConverterData {
           result.pangkatSejak = checkingNullAndConvertDate(params[key]);
           break;
         }
+        case "eselon":
+          result.eselon = params[key];
+          break;
         case "namaJabatan":
           result.namaJabatan = params[key];
           break;

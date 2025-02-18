@@ -15,6 +15,8 @@ const satuanKerja = [
   { nama: "Kejaksaan Negeri Muaro Jambi" },
   { nama: "Kejaksaan Negeri Tanjung Jabung Timur" },
   { nama: "Cabjari Batanghari Muara Tembesi" },
+  { nama: "Cabjari Tanjung Jabung Timur Nipah Panjang" },
+  { nama: "PPPK" },
 ];
 
 async function seedSatuanKerja() {
