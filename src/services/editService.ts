@@ -153,7 +153,7 @@ class EditService {
     if (editField.jaksa !== null && editField.originalRank !== null) {
       editField.originalRank = ConverterData.originalRankFullConverter({
         jaksa: editField.jaksa,
-        originalRank: editField.originalRank,
+        originalRank: editField.originalRank?.match(/\(.*?\)/g)?.[0] as string,
       });
     }
     if (editField.originalRank) {
